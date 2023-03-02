@@ -113,15 +113,15 @@ python bot.py
 
 If you have any issues or questions of how to code a specific command, you can:
 
-* Join my discord server [here](https://discord.gg/mTBrXyWxAF)
-* Post them [here](https://github.com/kkrypt0nn/Python-Discord-Bot-Template/issues)
+* Join my discord server [here](https://discord.gg/SPMGM3Z)
+
 
 Me or other people will take their time to answer and help you.
 
 ## Versioning
 
 We use [SemVer](http://semver.org) for versioning. For the versions available, see
-the [tags on this repository](https://github.com/kkrypt0nn/Python-Discord-Bot-Template/tags).
+
 
 ## Built With
 
