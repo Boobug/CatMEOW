@@ -113,7 +113,7 @@ python bot.py
 
 If you have any issues or questions of how to code a specific command, you can:
 
-* Join my discord server [here](https://discord.gg/SPMGM3Z)
+
 
 
 Me or other people will take their time to answer and help you.
