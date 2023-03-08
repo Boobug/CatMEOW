@@ -7,6 +7,7 @@
 * [ ] Identify useful cogs and archive the ones not important
 * [ ] Consolidate important functions from similar bots
 * [ ] Consider modular implementations of the $maple command to allow for variations such as kittify, mounts, nekkid-character (,,>﹏<,,) and more!
+* [ ] "Three-way handshake" discord role auto-assign(User input IGN, discord bot verifies from ML site, discord group admin/member approve/deny)
 
 ## Done
 
