@@ -147,6 +147,7 @@ def hair_color_changing(url, color):
         0: 'BLACK',
         1: 'RED',
         2: 'WHITE',
+        2: 'ORANGE',
         3: 'BLONDE',
         4: 'GREEN',
         5: 'BLUE',
@@ -206,75 +207,6 @@ def kittifying(url,ign_now):
 ##this is the start of all the important request and url edits##
 
 
-# def get_avatar_image(ign, mount=0, animated=0, emotion=None):
-#     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2' #default f2
-    
-#     # Modify the last character of the URL based on the emotion argument
-#     if emotion:
-#         url = url[:-1] + str(detect_emotion(emotion))
-    
-#     # Set the headers with randomized User-Agent and Referrer Policy
-#     user_agents = [
-#         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-#         'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
-#         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8'
-#     ]
-#     headers = {
-#         'User-Agent': random.choice(user_agents),
-#         'Referer': 'https://maplelegends.com',
-#         'Referrer Policy': 'strict-origin-when-cross-origin'
-#     }
-
-#     # Send a GET request to the URL with the headers
-#     response = requests.get(url, headers=headers)
-#     return response.url
-
-#manipulation of the get_avatar_image
-
-# def get_avatar_image(input_str):
-#     # Parse the input string to get the values of the variables
-#     variables = parse_input_string(input_str)
-    
-#     # Set the variables to their default values if they are not provided in the input string
-#     ign = variables['ign']
-#     mount = variables.get('mount', 0)
-#     animated = variables.get('animated', 0)
-#     kittify = variables.get('kittify', 0)
-#     emotion = variables.get('emotion', 'default')
-    
-#     # Generate the base URL
-#     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
-
-#     # Apply the optional modifications to the URL
-#     if kittify:
-#         url = kittify(url, ign)
-    
-#     if emotion != 'default':
-#         url = detect_emotion(url, emotion)
-    
-#     if 'hair_color' in variables:
-#         url = hair_color_change(url, variables['hair_color'])
-    
-#     # Set the headers with randomized User-Agent and Referrer Policy
-#     user_agents = [
-#         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-#         'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
-#         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8'
-#     ]
-#     headers = {
-#         'User-Agent': random.choice(user_agents),
-#         'Referer': 'https://maplelegends.com',
-#         'Referrer Policy': 'strict-origin-when-cross-origin'
-#     }
-
-#     # Send a GET request to the URL with the headers
-#     response = requests.get(url, headers=headers)
-#     return response.url
-
 
 def get_avatar_image(input_str):
     variables = parse_input_string(input_str)
@@ -284,7 +216,6 @@ def get_avatar_image(input_str):
     hair_color_change = variables['hair_color_change']
     detect_emotion_val = variables['detect_emotion']
     kittified = variables['kittify']
-    print(variables)
     # Create the URL string with the variables
     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
 
@@ -336,5 +267,5 @@ def parse_input_string(input_str):
 
 
 #{'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
-print(get_avatar_image('rawrsaur kittify purple f17'))
+print(get_avatar_image('kaza kittify blonde f19'))
 
