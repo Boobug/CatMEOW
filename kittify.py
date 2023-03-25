@@ -255,6 +255,7 @@ def get_avatar_image(input_str):
     kittified = variables['kittify']
     # Create the URL string with the variables
     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
+    print(url)
     if detect_emotion_val != 2:
         url = url[:-1] + str(detect_emotion_val)
     # Get the image from the URL
@@ -272,15 +273,15 @@ def get_avatar_image(input_str):
 
 
 def parse_input_string(input_str):
-    variables = {'ign': None, 'mount': False, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
+    variables = {'ign': None, 'mount': 0, 'animated': 0, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
     split_input = input_str.split(' ')
     variables['ign'] = split_input[0]
 
     for var in split_input[1:]:
         if var in ('mount', 'Mount'):
-            variables['mount'] = True
+            variables['mount'] = 1
         elif var in ('animated', 'Animated'):
-            variables['animated'] = True
+            variables['animated'] = 1
         elif var in ('kittify', 'Kittify'):
             variables['kittify'] = True
         elif hair_color_detect(var):
@@ -302,5 +303,5 @@ def parse_input_string(input_str):
 
 
 #{'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
-print(get_avatar_image('claudiaheal kittify f0'))
+print(get_avatar_image('baeaf animated kittify f10'))
 
