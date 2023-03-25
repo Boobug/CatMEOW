@@ -188,6 +188,9 @@ def replace_last_digit(url, new_digit):
 #         except (requests.exceptions.HTTPError, requests.exceptions.RequestException) as e:
 #             raise ValueError(f'Invalid URL or image not found: {new_url}') from e
 #         return new_url
+def get_optional_arg(url_str, arg_name):
+    arg_value = re.findall(fr'{arg_name}=([^&]*)', url_str, re.IGNORECASE)
+    return arg_value[0] if arg_value else None
 
 
 def hair_color_changing(url_str, hair_color_change):
@@ -252,7 +255,6 @@ def get_avatar_image(input_str):
     kittified = variables['kittify']
     # Create the URL string with the variables
     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
-    print(variables)
     if detect_emotion_val != 2:
         url = url[:-1] + str(detect_emotion_val)
     # Get the image from the URL
