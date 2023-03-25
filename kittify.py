@@ -10,7 +10,6 @@ def get_response(legends_url):
     return response.url
 
 
-
 def check_valid_url(url):
     try:
         response = requests.get(url)
@@ -25,34 +24,69 @@ def check_valid_url(url):
         return False
 
 
+
+import re
+
+def detect_emotion(emotion_str):
+    # returns integers
+    if re.match(r'^f[1-9]\d*$', emotion_str):
+        # If so, extract the numeral and return it as an integer
+        return int(emotion_str[1:])
+
+    # Check if the input string matches any of the emotion keywords
+    emotion_str = emotion_str.lower()
+    if emotion_str == "default":
+        return 0
+    elif emotion_str == "hit":
+        return 1
+    elif emotion_str == "smile":
+        return 2
+    elif emotion_str == "troubled":
+        return 3
+    elif emotion_str == "cry":
+        return 4
+    elif emotion_str == "angry":
+        return 5
+    elif emotion_str == "bewildered":
+        return 6
+    elif emotion_str == "stunned":
+        return 7
+    elif emotion_str == "blaze":
+        return 8
+    elif emotion_str == "bowing":
+        return 9
+    elif emotion_str == "cheers":
+        return 10
+    elif emotion_str == "chu":
+        return 11
+    elif emotion_str == "dam":
+        return 12
+    elif emotion_str == "despair":
+        return 13
+    elif emotion_str == "glitter":
+        return 14
+    elif emotion_str == "hot":
+        return 15
+    elif emotion_str == "hum":
+        return 16
+    elif emotion_str == "love":
+        return 17
+    elif emotion_str == "oops":
+        return 18
+    elif emotion_str == "pain":
+        return 19
+
+    # If no match is found, return None
+    return 0
+
+
+
 def get_gender(name):
     url = f"https://maplelegends.com/api/character?name={name}"
     response = requests.get(url)
     data = response.json()
     gender = data["gender"]
     return gender
-
-
-def get_avatar_image(ign, gender):
-    url = f'https://maplelegends.com/api/getavatar?name={ign}&mount=0&animated=0&face=f2'
-    
-    # Set the headers with randomized User-Agent and Referrer Policy
-    user_agents = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
-        'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8'
-    ]
-    headers = {
-        'User-Agent': random.choice(user_agents),
-        'Referer': 'https://maplelegends.com',
-        'Referrer Policy': 'strict-origin-when-cross-origin'
-    }
-
-    # Send a GET request to the URL with the headers
-    response = requests.get(url, headers=headers)
-    return response.url
 
 
 def replace_item_id(link, replacement):
@@ -99,22 +133,7 @@ def replace_last_digit(url, new_digit):
     # Replace the old number with the new number in the URL
     return url[:start_index] + new_number + url[end_index:]
 
-
-
-def kittify(ign_now):
-    #let's combine everything nicely above
-    if get_gender(ign_now) == 'female':
-        hair_digit_4 = '3445'
-    else:
-        hair_digit_4 = '3343'
-    avatar_url = get_avatar_image(ign_now, get_gender(ign_now))
-    if check_valid_url(avatar_url):
-        return replace_item_id(avatar_url, hair_digit_4)
-    else:
-        raise ValueError("Invalid URL or image format")
-
-
-def detect_color(text):
+def hair_color_changing(url, color):
     color_dict = {
         'BLACK': 0,
         'RED': 1,
@@ -124,31 +143,27 @@ def detect_color(text):
         'GREEN': 4,
         'BLUE': 5,
         'PURPLE': 6,
-        'BROWN': 7
+        'BROWN': 7,
+        0: 'BLACK',
+        1: 'RED',
+        2: 'WHITE',
+        3: 'BLONDE',
+        4: 'GREEN',
+        5: 'BLUE',
+        6: 'PURPLE',
+        7: 'BROWN'
     }
-    regex = re.compile('|'.join(color_dict.keys()), re.IGNORECASE)
-    matches = regex.findall(text)
-    if matches:
-        return color_dict[matches[0].upper()]
-    return None
-
-def hair_color_change(url, color):
-    color_dict = {
-        'BLACK': 0,
-        'RED': 1,
-        'ORANGE': 2,
-        'WHITE': 2,
-        'BLONDE': 3,
-        'GREEN': 4,
-        'BLUE': 5,
-        'PURPLE': 6,
-        'BROWN': 7
-    }
-    regex = re.compile('|'.join(color_dict.keys()), re.IGNORECASE)
-    matches = regex.findall(color)
-    if not matches:
-        raise ValueError(f'Invalid color: {color}')
-    color_code = color_dict[matches[0].upper()]
+    if isinstance(color, str):
+        color_str = color.upper()
+        if color_str not in color_dict:
+            raise ValueError(f'Invalid color: {color}')
+        color_code = color_dict[color_str]
+    elif isinstance(color, int):
+        if color not in color_dict:
+            raise ValueError(f'Invalid color code: {color}')
+        color_code = color
+    else:
+        raise TypeError(f'Invalid color type: {type(color)}')
     new_url = replace_last_digit(url, color_code)
     try:
         response = requests.get(new_url)
@@ -158,5 +173,168 @@ def hair_color_change(url, color):
     return new_url
 
 
+def hair_color_detect(color_str):
+    color_dict = {
+        'BLACK': 0,
+        'RED': 1,
+        'ORANGE': 2,
+        'WHITE': 2,
+        'BLONDE': 3,
+        'GREEN': 4,
+        'BLUE': 5,
+        'PURPLE': 6,
+        'BROWN': 7
+    }
+    regex = re.compile('|'.join(color_dict.keys()), re.IGNORECASE)
+    matches = regex.findall(color_str)
+    if not matches:
+        return None
+    color_code = color_dict[matches[0].upper()]
+    return color_code
 
-print(hair_color_change(kittify('kaza'), 'BlAcK'))
+
+
+def kittifying(url,ign_now):
+    #let's combine everything nicely above
+    if get_gender(ign_now) == 'female':
+        hair_digit_4 = '3445'
+    else:
+        hair_digit_4 = '3343'
+    return replace_item_id(url, hair_digit_4)
+
+
+##this is the start of all the important request and url edits##
+
+
+# def get_avatar_image(ign, mount=0, animated=0, emotion=None):
+#     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2' #default f2
+    
+#     # Modify the last character of the URL based on the emotion argument
+#     if emotion:
+#         url = url[:-1] + str(detect_emotion(emotion))
+    
+#     # Set the headers with randomized User-Agent and Referrer Policy
+#     user_agents = [
+#         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+#         'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
+#         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8'
+#     ]
+#     headers = {
+#         'User-Agent': random.choice(user_agents),
+#         'Referer': 'https://maplelegends.com',
+#         'Referrer Policy': 'strict-origin-when-cross-origin'
+#     }
+
+#     # Send a GET request to the URL with the headers
+#     response = requests.get(url, headers=headers)
+#     return response.url
+
+#manipulation of the get_avatar_image
+
+# def get_avatar_image(input_str):
+#     # Parse the input string to get the values of the variables
+#     variables = parse_input_string(input_str)
+    
+#     # Set the variables to their default values if they are not provided in the input string
+#     ign = variables['ign']
+#     mount = variables.get('mount', 0)
+#     animated = variables.get('animated', 0)
+#     kittify = variables.get('kittify', 0)
+#     emotion = variables.get('emotion', 'default')
+    
+#     # Generate the base URL
+#     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
+
+#     # Apply the optional modifications to the URL
+#     if kittify:
+#         url = kittify(url, ign)
+    
+#     if emotion != 'default':
+#         url = detect_emotion(url, emotion)
+    
+#     if 'hair_color' in variables:
+#         url = hair_color_change(url, variables['hair_color'])
+    
+#     # Set the headers with randomized User-Agent and Referrer Policy
+#     user_agents = [
+#         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+#         'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
+#         'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+#         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8'
+#     ]
+#     headers = {
+#         'User-Agent': random.choice(user_agents),
+#         'Referer': 'https://maplelegends.com',
+#         'Referrer Policy': 'strict-origin-when-cross-origin'
+#     }
+
+#     # Send a GET request to the URL with the headers
+#     response = requests.get(url, headers=headers)
+#     return response.url
+
+
+def get_avatar_image(input_str):
+    variables = parse_input_string(input_str)
+    ign = variables['ign']
+    mount = variables['mount']
+    animated = variables['animated']
+    hair_color_change = variables['hair_color_change']
+    detect_emotion_val = variables['detect_emotion']
+    kittified = variables['kittify']
+    print(variables)
+    # Create the URL string with the variables
+    url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
+
+    if detect_emotion_val != 2:
+        url = url[:-1] + str(detect_emotion_val)
+    # Get the image from the URL
+    url = requests.get(url)
+    url_str=url.url
+    if kittified:
+        url_str = kittifying(url_str, ign)
+    if hair_color_change != 2 :
+        url_str = hair_color_changing(url_str,hair_color_change)
+    return url_str
+
+
+
+
+
+
+def parse_input_string(input_str):
+    variables = {'ign': None, 'mount': False, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
+    split_input = input_str.split(' ')
+
+    variables['ign'] = split_input[0]
+
+    for var in split_input[1:]:
+        if var in ('mount', 'Mount'):
+            variables['mount'] = True
+        elif var in ('animated', 'Animated'):
+            variables['animated'] = True
+        elif var in ('kittify', 'Kittify'):
+            variables['kittify'] = True
+        elif hair_color_detect(var):
+            variables['hair_color_change'] = hair_color_detect(var)
+        elif detect_emotion(var):
+            variables['detect_emotion'] = detect_emotion(var)
+
+    return variables
+
+
+
+
+
+
+
+
+
+
+
+
+#{'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
+print(get_avatar_image('rawrsaur kittify purple f17'))
+
