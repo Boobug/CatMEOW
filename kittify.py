@@ -309,7 +309,6 @@ def get_avatar_image(input_str):
     kittified = variables['kittify']
     # Create the URL string with the variables
     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
-    print(variables)
     if detect_emotion_val != 2:
         url = url[:-1] + str(detect_emotion_val)
     # Get the image from the URL
@@ -328,6 +327,9 @@ def get_avatar_image(input_str):
 
 
 def parse_input_string(input_str):
+    if isinstance(input_str, dict):
+        return input_str
+
     variables = {'ign': None, 'mount': 0, 'animated': 0, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
     color_dict = {
         'BLACK': 0,
@@ -340,8 +342,8 @@ def parse_input_string(input_str):
         'PURPLE': 6,
         'BROWN': 7
     }
-    
-    def color_detects(var):
+
+    def color_detect(var):
         if var.isdigit() and int(var) in color_dict.values():
             return int(var)
         elif var.upper() in color_dict:
@@ -349,11 +351,11 @@ def parse_input_string(input_str):
         else:
             return None
 
-    split_input = input_str.split()
+    split_input = input_str.strip().split()
     variables['ign'] = split_input[0]
 
     for var in split_input[1:]:
-        color = color_detects(var)
+        color = color_detect(var)
         if var in ('mount', 'Mount'):
             variables['mount'] = 1
         elif var in ('animated', 'Animated'):
@@ -370,15 +372,6 @@ def parse_input_string(input_str):
 
 
 
-
-
-
-
-
-
-
-
-
 #{'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
-print(get_avatar_image('scrambleegg kittify 1 cry'))
-# print(hair_color_detect('gReEn'))
+
+get_avatar_image(parse_input_string('baeaf mount animated 2'))
