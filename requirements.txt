@@ -2,7 +2,6 @@ aiohttp
 aiosqlite
 discord.py
 asyncio
-json
 logging
 platform
 exceptions
