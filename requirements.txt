@@ -1,7 +1,7 @@
 aiohttp
 aiosqlite
 discord.py
-asyncio.py
+asyncio
 json
 logging
 platform
