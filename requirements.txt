@@ -2,11 +2,4 @@ aiohttp
 aiosqlite
 discord.py
 asyncio
-logging
-platform
-exceptions
-os
-re
-requests
-random
-bs4
+
