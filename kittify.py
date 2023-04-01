@@ -1,60 +1,60 @@
-
 import re
 import requests
 import random
 import re
 from bs4 import BeautifulSoup
 
+
 def get_response(legends_url):
     # """
     # Function that takes in a URL as a parameter, sends a GET request to the URL using the requests module, 
     # and returns the URL of the response received.
-    
+
     # Parameters:
     # legends_url (str): URL of the website to which the GET request is to be sent
-    
+
     # Returns:
     # str: URL of the response received
     # """
-    
+
     # Send a GET request to the given URL and store the response in a variable called 'response'
     response = requests.get(legends_url)
-    
+
     # Return the URL of the response received
     return response.url
+
 
 def check_valid_url(url):
     # """
     # Function that takes in a URL as a parameter, sends a GET request to the URL using the requests module, 
     # and checks if the response is a valid image file (JPEG, PNG or GIF). Returns True if the URL is valid 
     # and points to an image file, and False otherwise.
-    
+
     # Parameters:
     # url (str): URL of the image file to be checked
-    
+
     # Returns:
     # bool: True if the URL is valid and points to an image file, False otherwise
     # """
-    
+
     try:
         # Send a GET request to the given URL and store the response in a variable called 'response'
         response = requests.get(url)
-        
+
         # Check if the status code of the response is 200 (OK)
         if response.status_code == 200:
-            
+
             # Check if the content type of the response is an image file (JPEG, PNG or GIF)
             if response.headers.get('content-type') in ['image/jpeg', 'image/png', 'image/gif']:
                 return True  # Return True if the URL points to a valid image file
             else:
                 return False  # Return False if the URL points to a file that is not an image
-                
+
         else:
             return False  # Return False if the GET request was not successful (status code other than 200)
-    
+
     except:
         return False  # Return False if there was an error while sending the GET request or processing the response
-
 
 
 def detect_emotion(emotion_str):
@@ -63,14 +63,14 @@ def detect_emotion(emotion_str):
     # If the input string matches a pre-defined keyword for an emotion, the corresponding integer code is returned. 
     # If the input string matches a specific pattern, it is assumed to be a custom emotion code and is returned as an integer.
     # If the input string does not match any of the predefined emotions or the custom pattern, False is returned.
-    
+
     # Parameters:
     # emotion_str (str): String representation of the emotion to be detected
-    
+
     # Returns:
     # int or False: Integer code for the emotion, or False if the input string does not match any predefined emotion or pattern
     # """
-    
+
     # Check if the input string matches the pattern for custom emotion codes (starting with the letter 'f')
     if re.match(r'^f[1-9]\d*$', emotion_str):
         # If so, extract the numeral and return it as an integer
@@ -129,16 +129,13 @@ def detect_emotion(emotion_str):
     return False
 
 
-
-
-
 def get_gender(name):
     # """
     # Function that takes in a Maple Legends character name as a string and returns the gender of the character.
-    
+
     # Parameters:
     # name (str): The name of the Maple Legends character whose gender is to be determined
-    
+
     # Returns:
     # str: The gender of the character with the given name, as determined by the Maple Legends API. If the gender cannot
     #      be determined, the function returns "female" by default.
@@ -153,17 +150,15 @@ def get_gender(name):
     return gender  # Return the gender of the character as a string
 
 
-
-
 def replace_item_id(link, replacement):
     # """
     # Function that takes in a Maple Legends item link as a string and replaces the first 4 digits of the item ID with a new
     # set of digits.
-    
+
     # Parameters:
     # link (str): The Maple Legends item link whose item ID is to be replaced
     # replacement (str): The new 4-digit prefix to use for the item ID
-    
+
     # Returns:
     # str: The updated Maple Legends item link with the first 4 digits of the item ID replaced with the given prefix. If
     #      the link does not contain a valid item ID, the function returns the original link unchanged.
@@ -181,10 +176,10 @@ def replace_item_id(link, replacement):
     if comma_index == -1:
         return link  # Comma not found after colon
     # Extract the item ID and replace the first 4 digits
-    item_id = link[colon_index+1:comma_index].strip()  # Extracting the item ID from the link
+    item_id = link[colon_index + 1:comma_index].strip()  # Extracting the item ID from the link
     new_id = replacement + item_id[4:]  # Constructing the new item ID with the given replacement prefix
     # Construct the new link with the replaced item ID
-    return link[:colon_index+1] + new_id + link[comma_index:]
+    return link[:colon_index + 1] + new_id + link[comma_index:]
 
 
 def replace_last_digit(url, new_digit):
@@ -261,8 +256,6 @@ def hair_color_changing(url, color):
     return new_url
 
 
-
-
 def hair_color_detect(color_str):
     color_dict = {
         'BLACK': 0,
@@ -284,10 +277,8 @@ def hair_color_detect(color_str):
     return color_code
 
 
-
-
-def kittifying(url,ign_now):
-    #let's combine everything nicely above
+def kittifying(url, ign_now):
+    # let's combine everything nicely above
     if get_gender(ign_now) == 'female':
         hair_digit_4 = '3445'
     else:
@@ -295,8 +286,27 @@ def kittifying(url,ign_now):
     return replace_item_id(url, hair_digit_4)
 
 
-##this is the start of all the important request and url edits##
+def color_detect(var):
+    color_dict = {
+        'BLACK': 0,
+        'RED': 1,
+        'ORANGE': 2,
+        'WHITE': 2,
+        'BLONDE': 3,
+        'GREEN': 4,
+        'BLUE': 5,
+        'PURPLE': 6,
+        'BROWN': 7
+    }
+    if var.isdigit() and int(var) in color_dict.values():
+        return int(var)
+    elif var.upper() in color_dict:
+        return color_dict[var.upper()]
+    else:
+        return None
 
+
+# this is the start of all the important request and url edits #
 
 
 def get_avatar_image(input_str):
@@ -313,43 +323,24 @@ def get_avatar_image(input_str):
         url = url[:-1] + str(detect_emotion_val)
     # Get the image from the URL
     url = requests.get(url)
-    url_str=url.url
+    url_str = url.url
     if kittified:
         url_str = kittifying(url_str, ign)
-    if hair_color_change != 2 :
+    if hair_color_change != 2:
         if hair_color_change is not None:
-            url_str = hair_color_changing(url_str,hair_color_change)
+            url_str = hair_color_changing(url_str, hair_color_change)
     return url_str
-
-
-
-
 
 
 def parse_input_string(input_str):
     if isinstance(input_str, dict):
         return input_str
 
-    variables = {'ign': None, 'mount': 0, 'animated': 0, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
-    color_dict = {
-        'BLACK': 0,
-        'RED': 1,
-        'ORANGE': 2,
-        'WHITE': 2,
-        'BLONDE': 3,
-        'GREEN': 4,
-        'BLUE': 5,
-        'PURPLE': 6,
-        'BROWN': 7
-    }
+    variables = {'ign': None, 'mount': 0, 'animated': 0, 'hair_color_change': None, 'detect_emotion': 0,
+                 'kittify': False}
 
-    def color_detect(var):
-        if var.isdigit() and int(var) in color_dict.values():
-            return int(var)
-        elif var.upper() in color_dict:
-            return color_dict[var.upper()]
-        else:
-            return None
+
+
 
     split_input = input_str.strip().split()
     variables['ign'] = split_input[0]
@@ -370,8 +361,6 @@ def parse_input_string(input_str):
     return variables
 
 
-
-
-#{'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
+# {'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
 
 get_avatar_image(parse_input_string('baeaf mount animated 2'))
