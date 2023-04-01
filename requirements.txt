@@ -3,3 +3,5 @@ aiosqlite
 discord.py
 asyncio
 pandas
+requests
+beautifulsoup4
