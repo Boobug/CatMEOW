@@ -12,14 +12,12 @@
 
 
 
-See [the license file](https://github.com/Boobug/CatMEOW/blob/master/LICENSE.md) for more
+See [the license file](https://github.com/Boobug/CatMEOW/blob/master/LICENSE.md) for source 
 
 
 ## Support
 
-Before requesting support, you should know that this template requires you to have at least a **basic knowledge** of
-Python and the library is made for advanced users. Do not use this template if you don't know the
-basics. [Here's](https://pythondiscord.com/pages/resources) a link for resources to learn python.
+This will be ready when a release of the bot is available
 
 
 All the updates of the template are available [here](UPDATES.md).
