@@ -336,7 +336,7 @@ def parse_input_string(input_str):
     if isinstance(input_str, dict):
         return input_str
 
-    variables = {'ign': None, 'mount': 0, 'animated': 0, 'hair_color_change': None, 'detect_emotion': 0,
+    variables = {'ign': None, 'mount': 0, 'animated': 1, 'hair_color_change': None, 'detect_emotion': 0,
                  'kittify': False}
 
     split_input = input_str.strip().split()
