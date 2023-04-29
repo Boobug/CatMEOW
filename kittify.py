@@ -3,7 +3,8 @@ import requests
 import random
 import re
 from bs4 import BeautifulSoup
-
+import requests
+from io import BytesIO
 
 def get_response(legends_url):
     # """
@@ -317,6 +318,7 @@ def get_avatar_image(input_str):
     hair_color_change = variables['hair_color_change']
     detect_emotion_val = variables['detect_emotion']
     kittified = variables['kittify']
+    nekkid = variables['nekkid']
     # Create the URL string with the variables
     url = f'https://maplelegends.com/api/getavatar?name={ign}&mount={mount}&animated={animated}&face=f2'
     if detect_emotion_val != 2:
@@ -324,6 +326,9 @@ def get_avatar_image(input_str):
     # Get the image from the URL
     url = requests.get(url)
     url_str = url.url
+  
+    if nekkid:
+        url_str = get_naked(url_str)
     if kittified:
         url_str = kittifying(url_str, ign)
     if hair_color_change != 2:
@@ -332,15 +337,56 @@ def get_avatar_image(input_str):
     return url_str
 
 
+def get_naked(link):
+    """
+    Function that takes in a Maple Legends item link as a string and replaces all 7-digit item IDs with the value 2000.
+
+    Parameters:
+    link (str): The Maple Legends item link to modify.
+
+    Returns:
+    str: The updated Maple Legends item link with all 7-digit item IDs replaced with 2000.
+    """
+    # Find the index of the first occurrence of "itemId"
+    start_index = link.find("itemId")
+    if start_index == -1:
+        return link  # "itemId" not found in link
+
+    while True:
+        # Find the index of the colon (:) after "itemId"
+        colon_index = link.find(":", start_index)
+        if colon_index == -1:
+            break  # No more colons found
+
+        # Find the index of the comma (,) after the colon
+        comma_index = link.find(",", colon_index)
+        if comma_index == -1:
+            break  # No more commas found
+
+        # Extract the item ID and check if it is 7 digits long
+        item_id = link[colon_index + 1:comma_index].strip()  # Extracting the item ID from the link
+        if len(item_id) == 7:
+            # Replace the item ID with 2000
+            link = link[:colon_index + 1] + "2000" + link[comma_index:]
+        
+        # Update the start index for the next iteration
+        start_index = comma_index
+    
+    return link
+
+
+
+
+
+
+
+
 def parse_input_string(input_str):
     if isinstance(input_str, dict):
         return input_str
 
     variables = {'ign': None, 'mount': 0, 'animated': 0, 'hair_color_change': None, 'detect_emotion': 0,
-                 'kittify': False}
-
-
-
+                 'kittify': False, 'nekkid':False}
 
     split_input = input_str.strip().split()
     variables['ign'] = split_input[0]
@@ -353,6 +399,8 @@ def parse_input_string(input_str):
             variables['animated'] = 1
         elif var in ('kittify', 'Kittify'):
             variables['kittify'] = True
+        elif var in ('naked', 'nekkid'):
+            variables['nekkid'] = True
         elif color is not None:
             variables['hair_color_change'] = color
         elif detect_emotion(var):
@@ -361,6 +409,8 @@ def parse_input_string(input_str):
     return variables
 
 
+
+
 # {'ign': None, 'mount': 0, 'animated': False, 'hair_color_change': None, 'detect_emotion': 0, 'kittify': False}
 
-get_avatar_image(parse_input_string('baeaf mount animated 2'))
+print(get_avatar_image(parse_input_string('baeaf nmount animated 2 nekkid')))
